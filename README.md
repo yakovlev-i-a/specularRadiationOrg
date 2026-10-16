@@ -23,7 +23,7 @@ plane (the classic `zeroGradient` behaviour).
 ## Build
 
 ```bash
-cd specularRadiatioOrg
+cd specularRadiationOrg
 ./Allwmake
 # or
 wmake libso
@@ -56,6 +56,39 @@ ray (Eq. 4).
 
 > The condition only accepts `wedge` and `symmetryPlane` patches. Applying it
 > to a physical wall throws a `FatalError`.
+
+## Why `symmetryPlane` (not `symmetry`)
+
+The specular law is a **single-plane** operation:
+
+    d' = d - 2 (d·n) n
+
+It needs **one** well-defined normal `n` for the whole patch, because the
+complementary (reflected) ray is computed once per patch:
+
+    dSpe = normalised(dAve[rayID] - 2*(dAve[rayID] & n)*n)
+
+OpenFOAM has two different symmetry patch types, and they are *not*
+interchangeable here:
+
+| Patch type      | Geometry                        | Single normal `n()`? | Works with this BC? |
+|-----------------|---------------------------------|----------------------|---------------------|
+| `symmetryPlane` | exactly one plane               | **yes** (stored `vector n_`) | **yes** |
+| `symmetry`      | non-planar or multi-plane       | no (one per face)    | no                  |
+| `wedge`         | axisymmetric sector (one plane) | **yes**              | **yes**             |
+
+- `symmetryPlane` stores a single `n_` and exposes it via `n()`.
+- `symmetry` is the *general* symmetry for **non-planar or multi-plane**
+  patches: different faces may lie in different planes, so there is no single
+  normal and hence no unique "complementary ray" — the specular condition is
+  mathematically undefined for it.
+
+Therefore this BC is restricted to `wedge` and `symmetryPlane` (a hard
+`FatalError` for anything else), matching the v2306 implementation.
+
+> Practical rule for 2D / axisymmetric `fvDOM`: put `symmetryPlane` (or
+> `wedge`) on the symmetry patches — not `symmetry` — only then does the
+> specular boundary make sense.
 
 ## Notes / deviations from v2306
 
