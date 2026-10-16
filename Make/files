@@ -1,0 +1,3 @@
+specularRadiationMixedFvPatchScalarField/specularRadiationMixedFvPatchScalarField.C
+
+LIB = $(FOAM_USER_LIBBIN)/libspecularRadiation

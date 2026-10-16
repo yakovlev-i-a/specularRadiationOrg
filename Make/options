@@ -1,0 +1,19 @@
+EXE_INC = \
+    -I$(WM_PROJECT_DIR)/src/radiationModels/lnInclude \
+    -I$(WM_PROJECT_DIR)/src/physicalProperties/lnInclude \
+    -I$(WM_PROJECT_DIR)/src/thermophysicalModels/basic/lnInclude \
+    -I$(WM_PROJECT_DIR)/src/thermophysicalModels/specie/lnInclude \
+    -I$(WM_PROJECT_DIR)/src/thermophysicalModels/solidThermo/lnInclude \
+    -I$(WM_PROJECT_DIR)/src/thermophysicalModels/thermophysicalProperties/lnInclude \
+    -I$(WM_PROJECT_DIR)/src/thermophysicalModels/multicomponentThermo/lnInclude \
+    -I$(WM_PROJECT_DIR)/src/finiteVolume/lnInclude \
+    -I$(WM_PROJECT_DIR)/src/meshTools/lnInclude
+
+LIB_LIBS = \
+    -lradiationModels \
+    -lfluidThermophysicalModels \
+    -lspecie \
+    -lsolidThermo \
+    -lthermophysicalProperties \
+    -lfiniteVolume \
+    -lmeshTools
